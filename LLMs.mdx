@@ -15,3 +15,27 @@ There are 3 types of transformers:
   Use Cases: Translation, Summarization, Paraphrasing
 
   
+Next token prediction  
+LLMs are said to be autoregressive, meaning that the output from one pass becomes the input for the next one. The loop ends at EOS token.
+
+![AutoRegression](Image/AutoregressionSchema.gif)
+*From HuggingFace Agents course*
+
+![DecodingFinal](Image/DecodingFinal.gif)
+*From HuggingFace Agents course*
+
+
+## Attention
+When predicting the next word, not every word in a sentence is equally important.
+![Attention](Image/AttentionSceneFinal.gif)
+*From HuggingFace Agents course*  
+
+
+### Prompting the LLM is important  
+**Considering that the only job of an LLM is to predict the next token by looking at every input token, and to choose which tokens are “important”, the wording of your input sequence is very important.**  
+**The input sequence you provide an LLM is called a prompt. Careful design of the prompt makes it easier to guide the generation of the LLM toward the desired output.**  
+
+
+
+
+
