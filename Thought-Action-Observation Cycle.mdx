@@ -1,0 +1,49 @@
+AI Agent Workflow, a cycle we defined as Thought-Action-Observation.  
+Agents’ work is a continuous cycle of: thinking (Thought) → acting (Act) and observing (Observe).  
+Agents iterate through a loop until the objective is fulfilled.  
+Let’s break down these actions together:  
+
+    Thought: Internal Reasoning. The LLM part of the Agent decides what the next step should be. 
+    Action: Tool Usage. The agent takes an action by calling the tools with the associated arguments.
+    Observation: Feedback from the Environment. The model reflects on the response from the tool.
+    Updated thought: Reflecting. With the observation in hand, updates its internal reasoning.
+    Final Action: generates a final response.
+
+![Agentflow](Image/AgentCycle.gif)
+
+In many Agent frameworks, the rules and guidelines are embedded directly into the system prompt, ensuring that every cycle adheres to a defined logic.
+
+ It starts with a thought, then acts by calling a tool, and finally observes the outcome. 
+ If the observation had indicated an error or incomplete data, then re-entered the cycle to correct its approach.
+
+ Tool Integration:  
+ The ability to call a tool (like a weather API) enables Agents to go beyond static knowledge and retrieve real-time data, 
+ an essential aspect of many AI Agents.
+
+ 
+# Thought
+ ### Chain-of-Thought (CoT)  
+  is a prompting technique that guides a model to think through a problem step-by-step before producing a final answer.
+
+  
+ ### ReAct: Reasoning + Acting
+ is a prompting technique that encourages the model to think step-by-step and interleave actions (like using tools) between reasoning steps.  
+ This enables the agent to solve complex multi-step tasks by alternating between:
+
+    Thought: internal reasoning
+    Action: tool usage
+    Observation: receiving tool output
+```python
+Thought: I need to find the latest weather in Paris.
+Action: Search["weather in Paris"]
+Observation: It's 18°C and cloudy.
+Thought: Now that I know the weather...
+Action: Finish["It's 18°C and cloudy in Paris."]
+```
+
+Feature 	Chain-of-Thought (CoT) 	ReAct  
+Step-by-step logic 	✅ Yes 	✅ Yes  
+External tools 	❌ No 	✅ Yes (Actions + Observations)  
+Best suited for 	Logic, math, internal tasks 	Info-seeking, dynamic multi-step tasks  
+
+# Actions: Enabling the Agent to Engage with Its Environment
