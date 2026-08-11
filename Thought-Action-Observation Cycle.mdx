@@ -41,9 +41,51 @@ Thought: Now that I know the weather...
 Action: Finish["It's 18°C and cloudy in Paris."]
 ```
 
-Feature 	Chain-of-Thought (CoT) 	ReAct  
-Step-by-step logic 	✅ Yes 	✅ Yes  
-External tools 	❌ No 	✅ Yes (Actions + Observations)  
-Best suited for 	Logic, math, internal tasks 	Info-seeking, dynamic multi-step tasks  
+|Feature            |Chain-of-Thought (CoT) |ReAct|  
+| -------- | -------- | -------- |
+|Step-by-step logic |✅ Yes    |✅ Yes|  
+|External tools        |❌ No 	|✅ Yes (Actions + Observations)  
+|Best suited for    |Logic, math, internal tasks 	|Info-seeking, dynamic multi-step tasks  
+
 
 # Actions: Enabling the Agent to Engage with Its Environment
+| Type of Agent  | Description |
+| ------------- | ------------- |
+| JSON Agent  | The Action to take is specified in JSON format.  |
+| Code Agent  | The Agent writes a code block that is interpreted externally.  |
+| Function-calling Agent  | It is a subcategory of the JSON Agent which has been fine-tuned to generate a new message for each action.  |
+Actions themselves can serve many purposes:
+|Type of Action 	|Description|
+| ------------- | ------------- |
+|Information Gathering 	|Performing web searches, querying databases, or retrieving documents.|
+|Tool Usage 	|Making API calls, running calculations, and executing code.|
+|Environment Interaction 	|Manipulating digital interfaces or controlling physical devices.|
+|Communication 	|Engaging with users via chat or collaborating with other agents.|
+
+### The Stop and Parse Approach
+This method ensures that the agent’s output is structured and predictable:  
+
+    Generation in a Structured Format
+    Halting Further Generation
+    Parsing the Output
+
+### Code Agents 
+instead of outputting a simple JSON object, a Code Agent generates an executable code block—typically in a high-level language like Python.  
+
+
+# Observe: Integrating Feedback to Reflect and Adapt
+Observations are how an Agent perceives the consequences of its actions.  
+In the observation phase, the agent:
+
+    Collects Feedback: Receives data or confirmation that its action was successful (or not).
+    Appends Results: Integrates the new information into its existing context, effectively updating its memory.
+    Adapts its Strategy: Uses this updated context to refine subsequent thoughts and actions.
+
+|Type of Observation 	|Example|
+| ------------- | ------------- |
+|System Feedback 	|Error messages, success notifications, status codes|
+|Data Changes 	|Database updates, file system modifications, state changes|
+|Environmental Data 	|Sensor readings, system metrics, resource usage|
+|Response Analysis 	|API responses, query results, computation outputs|
+|Time-based Events |	Deadlines reached, scheduled tasks completed|
+
