@@ -1,0 +1,105 @@
+### System messages 
+(also called System Prompts) define how the model should behave. They serve as persistent instructions, guiding every subsequent interaction.
+
+```python  
+system_message = {
+    "role": "system",
+    "content": "You are a professional customer service agent. Always be polite, clear, and helpful."
+}
+```
+
+When using Agents, the System Message also:  
+&emsp; gives information about the available tools,  
+&emsp; provides instructions to the model on how to format the actions to take,  
+&emsp; includes guidelines on how the thought process should be segmented.  
+
+### Conversations: User and Assistant Messages
+A conversation consists of alternating messages between a Human (user) and an LLM (assistant).
+
+```python
+conversation = [
+    {"role": "user", "content": "I need help with my order"},
+    {"role": "assistant", "content": "I'd be happy to help. Could you provide your order number?"},
+    {"role": "user", "content": "It's ORDER-123"},
+]
+```
+
+SmolLM2:  
+```python
+<|im_start|>system
+You are a helpful AI assistant named SmolLM, trained by Hugging Face<|im_end|>
+<|im_start|>user
+I need help with my order<|im_end|>
+<|im_start|>assistant
+I'd be happy to help. Could you provide your order number?<|im_end|>
+<|im_start|>user
+It's ORDER-123<|im_end|>
+<|im_start|>assistant
+```
+Llama 3.2
+```python
+<|begin_of_text|><|start_header_id|>system<|end_header_id|>
+
+Cutting Knowledge Date: December 2023
+Today Date: 10 Feb 2025
+
+<|eot_id|><|start_header_id|>user<|end_header_id|>
+
+I need help with my order<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+
+I'd be happy to help. Could you provide your order number?<|eot_id|><|start_header_id|>user<|end_header_id|>
+
+It's ORDER-123<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+```
+
+### Base Models vs. Instruct Models  
+&emsp 1. A Base Model is trained on raw text data to predict the next token.  
+&emsp 2. An Instruct Model is fine-tuned specifically to follow instructions and engage in conversations. 
+For example, SmolLM2-135M is a base model, while SmolLM2-135M-Instruct is its instruction-tuned variant.  
+
+To make a Base Model behave like an instruct model, we need to format our prompts in a consistent way that the model can understand. This is where **chat templates** come in.  
+
+### Chat Templates
+are implemented to ensure that we correctly format the prompt the way each model expects.
+
+Below is a simplified version of the SmolLM2-135M-Instruct chat template:
+```python
+{% for message in messages %}
+{% if loop.first and messages[0]['role'] != 'system' %}
+<|im_start|>system
+You are a helpful AI assistant named SmolLM, trained by Hugging Face
+<|im_end|>
+{% endif %}
+<|im_start|>{{ message['role'] }}
+{{ message['content'] }}<|im_end|>
+{% endfor %}
+```
+Given messages:
+```python
+messages = [
+    {"role": "system", "content": "You are a helpful assistant focused on technical topics."},
+    {"role": "user", "content": "Can you explain what a chat template is?"},
+    {"role": "assistant", "content": "A chat template structures conversations between users and AI models..."},
+    {"role": "user", "content": "How do I use it ?"},
+]
+```
+The previous chat template will produce the following string:
+```python
+<|im_start|>system
+You are a helpful assistant focused on technical topics.<|im_end|>
+<|im_start|>user
+Can you explain what a chat template is?<|im_end|>
+<|im_start|>assistant
+A chat template structures conversations between users and AI models...<|im_end|>
+<|im_start|>user
+How do I use it ?<|im_end|>
+```
+All we have to do is structure our messages in the correct way and the tokenizer will take care of the rest.
+
+
+
+
+
+
+
+
