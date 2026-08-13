@@ -1,46 +1,57 @@
-1. Start required services  
+## 1. Start required services  
 Open PowerShell:  
 ```
 docker desktop start
 docker desktop status
 docker version
 ```
-
 Wait until docker version displays both Client and Server sections.  
 Start Ollama in another PowerShell window:  
 ```
 ollama serve
 ```
-
 Confirm the model is installed:  
 ```
 ollama list
 ```
 You should see qwen2.5:14b.  
-1. Make the Ollama URL configurable
-In app.py, add:
+## 2. Make the Ollama URL configurable
+In app.py, add:  
+```
 import os
-Change:
+```
+Change:  
+```
 api_base='http://localhost:11434/v1',
+```
 to:
+```
 api_base=os.getenv(
     "OLLAMA_BASE_URL",
     "http://localhost:11434/v1",
 ),  # CHANGED: supports Docker-to-Windows Ollama access
-A container must use host.docker.internal to reach services running on Windows; its own localhost refers to the container. Docker Desktop networking documentation
-3. Disable Gradio’s public share tunnel
+```
+A container must use host.docker.internal to reach services running on Windows; its own localhost refers to the container.  
+## 3. Disable Gradio’s public share tunnel
 In Gradio_UI.py, change:
+```
 demo.launch(debug=True, share=True, **kwargs)
+```
 to:
+```
 demo.launch(debug=False, share=False, **kwargs)  # CHANGED: local Docker deployment
+```
 Then change the last line of app.py to:
+```
 GradioUI(agent).launch(
     server_name="0.0.0.0",
     server_port=7860,
 )  # CHANGED: listen on the container network
-Gradio must listen on 0.0.0.0 to be reachable through Docker’s published port. Gradio launch documentation
-4. Complete requirements.txt
+```
+Gradio must listen on 0.0.0.0 to be reachable through Docker’s published port.   
+## 4. Complete requirements.txt
 Add the packages imported directly by the project:
+```
 markdownify
 smolagents[openai]==1.26.0
 gradio==6.23.1
@@ -49,8 +60,10 @@ pytz
 requests
 duckduckgo_search
 pandas
-5. Create Dockerfile
+```
+## 5. Create Dockerfile
 Create First_agent_template/Dockerfile:
+```
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -69,7 +82,8 @@ USER appuser
 EXPOSE 7860
 
 CMD ["python", "app.py"]
-6. Create .dockerignore
+```
+## 6. Create .dockerignore
 Create First_agent_template/.dockerignore:
 .git
 __pycache__
@@ -77,40 +91,56 @@ __pycache__
 .venv
 venv
 .env
-7. Test access to Windows Ollama
+## 7. Test access to Windows Ollama
 From PowerShell:
+```
 docker run --rm curlimages/curl:latest `
   http://host.docker.internal:11434/api/tags
+```
 The response should contain qwen2.5:14b.
 If the connection is refused, restart Ollama with a container-accessible bind address:
 $env:OLLAMA_HOST="0.0.0.0:11434"
 ollama serve
 Only use this on a trusted network, and do not expose port 11434 through your router.
-8. Build the agent image
+## 8. Build the agent image
 From the project directory:
+```
 cd C:\xuexi\AgentAI\First_agent_template
 
 docker build -t first-agent:local .
-9. Run the container
+```
+## 9. Run the container
+```
 docker run -d `
   --name first-agent `
   --restart unless-stopped `
   -p 127.0.0.1:7860:7860 `
   -e OLLAMA_BASE_URL=http://host.docker.internal:11434/v1 `
   first-agent:local
-Binding to 127.0.0.1 keeps the interface accessible only from this Windows computer. Docker requires -p to publish a container port. Docker port documentation
+```
+Binding to 127.0.0.1 keeps the interface accessible only from this Windows computer. Docker requires -p to publish a container port.
 Open:
+```
 http://127.0.0.1:7860
-10. Inspect and manage it
+```
+## 10. Inspect and manage it
 View logs:
+```
 docker logs -f first-agent
+```
 Restart:
+```
 docker restart first-agent
+```
 Stop and remove:
+```
 docker stop first-agent
 docker rm first-agent
+```
 After source changes, rebuild and recreate:
+```
 docker stop first-agent
 docker rm first-agent
 docker build -t first-agent:local .
+```
 Then run the command from step 9 again.
