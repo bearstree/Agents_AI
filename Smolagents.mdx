@@ -1,0 +1,30 @@
+# Smolagents & LLM   
+
+  &emsp; Definition: A lightweight software library created by Hugging Face.    
+  &emsp; Function: It provides a structure that lets an LLM write code snippets to run tools and solve multi-step problems.    
+  &emsp; Relationship: smolagents is model-agnostic and relies on an external LLM (like Qwen2 or OpenAI models) to act as its "brain".  
+
+Smolagents is one of the many open-source agent frameworks available for application development. Alternative options include **LlamaIndex and LangGraph.**  
+
+### CodeAgents
+are the primary type of agent in smolagents, produce Python code to perform actions. This module explores their purpose, functionality,
+and how they work, along with hands-on examples to showcase their capabilities.  
+
+### ToolCallingAgents
+ the second type of agent supported by smolagents. Unlike CodeAgents, which generate Python code, these agents rely on JSON/text blobs that the system must
+ parse and interpret to execute actions. 
+
+### Tools  
+are functions that an LLM can use within an agentic system, and they act as the essential building blocks for agent behavior. 
+
+### Retrieval Agents
+allow models access to knowledge bases, making it possible to search, synthesize, and retrieve information from multiple sources. They leverage vector stores 
+for efficient retrieval and implement Retrieval-Augmented Generation (RAG) patterns. These agents are particularly useful for integrating web search with custom
+knowledge bases while maintaining conversation context through memory systems. 
+
+### Multi-Agent Systems
+Orchestrating multiple agents effectively is crucial for building powerful, multi-agent systems. By combining agents with different capabilities—such as a
+web search agent with a code execution agent—you can create more sophisticated solutions. 
+
+### Vision and Browser agents
+Vision agents extend traditional agent capabilities by incorporating **Vision-Language Models (VLMs)**, enabling them to process and interpret visual information. 
